@@ -75,26 +75,16 @@ MoveResult Board::handleFirstClick(int row, int col) {
     int r = 0;
     int c = 0;
 
-    bool **bombMatrix;
-    bombMatrix = new bool *[m_rows];
-    for (int i = 0; i < m_rows; i++) {
-        bombMatrix[i] = new bool[m_cols]();
-    }
     for (int i = 0; i < m_bombs; i++) {
         r = rand() % m_rows;
         c = rand() % m_cols;
-        while (isNeighbor(r, c, row, col) || bombMatrix[r][c]) {
+        while (isNeighbor(r, c, row, col) || m_grid[r][c].isBomb()) {
             r = rand() % m_rows;
             c = rand() % m_cols;
         }
-        bombMatrix[r][c] = true;
+        m_grid[r][c].setBomb(true);
     }
 
-    for (int i = 0; i < m_rows; i++) {
-        for (int j = 0; j < m_cols; j++) {
-            m_grid[i][j].setBomb(bombMatrix[i][j]);
-        }
-    }
     for (int i = 0; i < m_rows; i++) {
         for (int j = 0; j < m_cols; j++) {
             calculateValue(i, j);
@@ -102,11 +92,6 @@ MoveResult Board::handleFirstClick(int row, int col) {
     }
     floodFill(row, col);
     updateGameState();
-
-    for (int i = 0; i < m_rows; i++) {
-        delete[] bombMatrix[i];
-    }
-    delete[] bombMatrix;
     return MoveResult::Valid;
 }
 
