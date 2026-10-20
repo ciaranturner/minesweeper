@@ -23,7 +23,7 @@ class Board {
     int m_bombs;
     int m_rows;
     int m_cols;
-    int m_bombsFlagged;
+    int m_flagCount;
     GameState m_gameState = GameState::Playing;
     void updateGameState();
     void calculateValue(int row, int col);

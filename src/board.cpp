@@ -8,7 +8,7 @@ Board::Board(int rows, int cols, int bombs) {
     m_rows = rows;
     m_cols = cols;
     m_grid = std::vector<std::vector<Cell>>(rows, std::vector<Cell>(cols));
-    m_bombsFlagged = 0;
+    m_flagCount = 0;
 }
 
 void Board::calculateValue(int row, int col) {
@@ -34,10 +34,10 @@ MoveResult Board::flagCell(int row, int col) {
         return MoveResult::AlreadyOpen;
     if (m_grid[row][col].getFlag()) {
         m_grid[row][col].setFlag(false);
-        m_bombsFlagged--;
+        m_flagCount--;
     } else {
         m_grid[row][col].setFlag(true);
-        m_bombsFlagged++;
+        m_flagCount++;
     }
     return MoveResult::Valid;
 }
@@ -108,7 +108,7 @@ GameState Board::getGameState() const { return m_gameState; }
 
 const Cell &Board::getCell(int row, int col) const { return m_grid[row][col]; }
 
-int Board::getFlagCount() const { return m_bombsFlagged; }
+int Board::getFlagCount() const { return m_flagCount; }
 
 int Board::getBombCount() const { return m_bombs; }
 
