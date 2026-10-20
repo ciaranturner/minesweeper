@@ -7,18 +7,8 @@ Board::Board(int rows, int cols, int bombs) {
     m_bombs = bombs;
     m_rows = rows;
     m_cols = cols;
-    m_grid = new Cell *[rows];
-    for (int i = 0; i < rows; i++) {
-        m_grid[i] = new Cell[cols];
-    }
+    m_grid = std::vector<std::vector<Cell>>(rows, std::vector<Cell>(cols));
     m_bombsFlagged = 0;
-}
-
-Board::~Board() {
-    for (int i = 0; i < m_rows; i++) {
-        delete[] m_grid[i];
-    }
-    delete[] m_grid;
 }
 
 void Board::calculateValue(int row, int col) {
@@ -116,7 +106,7 @@ void Board::floodFill(int row, int col) {
 
 GameState Board::getGameState() const { return m_gameState; }
 
-Cell &Board::getCell(int row, int col) const { return m_grid[row][col]; }
+const Cell &Board::getCell(int row, int col) const { return m_grid[row][col]; }
 
 int Board::getFlagCount() const { return m_bombsFlagged; }
 

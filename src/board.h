@@ -1,4 +1,6 @@
 #pragma once
+#include <vector>
+
 #include <cell.h>
 
 enum class GameState { Playing, Won, Lost };
@@ -7,9 +9,8 @@ enum class MoveResult { Valid, Invalid, Flagged, AlreadyOpen };
 class Board {
   public:
     Board(int rows, int cols, int bombs);
-    ~Board();
     MoveResult flagCell(int row, int col);
-    Cell &getCell(int row, int col) const;
+    const Cell &getCell(int row, int col) const;
     MoveResult processMove(int row, int col);
     bool checkMove(int row, int col);
     MoveResult handleFirstClick(int row, int col);
@@ -18,7 +19,7 @@ class Board {
     int getBombCount() const;
 
   private:
-    Cell **m_grid;
+    std::vector<std::vector<Cell>> m_grid;
     int m_bombs;
     int m_rows;
     int m_cols;

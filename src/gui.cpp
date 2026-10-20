@@ -114,23 +114,23 @@ string cellText(const Cell &cell) {
     return to_string(cell.getAdjacentBombs());
 }
 
-void displayBoard(Board *board, SDL_Renderer *rend, TTF_Font *font) {
+void displayBoard(const Board &board, SDL_Renderer *rend, TTF_Font *font) {
     SDL_Color b = {255, 255, 255, 0};
     SDL_Color f = {0, 0, 0, 0};
     SDL_Color color = {255, 255, 255, 0};
 
     SDL_RenderClear(rend);
     drawBackground(rend);
-    string text = to_string(board->getFlagCount());
+    string text = to_string(board.getFlagCount());
     int buffer = 0;
-    if (board->getFlagCount() > 9)
+    if (board.getFlagCount() > 9)
         buffer = 8;
     renderText(rend, font, text, color, 155 - buffer, 88);
     color = {255, 255, 255, 255};
 
     for (int i = 0; i < ROW_COUNT; i++) {
         for (int j = 0; j < COL_COUNT; j++) {
-            const Cell &cell = board->getCell(i, j);
+            const Cell &cell = board.getCell(i, j);
             SDL_Rect box;
             box.x = BOARD_X + j * CELL_SIZE;
             box.y = BOARD_Y + i * CELL_SIZE;
@@ -179,13 +179,13 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
     drawBackground(renderer);
-    Board *board = new Board(ROW_COUNT, COL_COUNT, 10);
+    Board board(ROW_COUNT, COL_COUNT, 10);
     SDL_Event windowEvent;
     bool firstClick = true;
     bool running = true;
     int r, c;
     Uint32 startTime = 0;
-    while (running && board->getGameState() == GameState::Playing) {
+    while (running && board.getGameState() == GameState::Playing) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
         while (SDL_PollEvent(&windowEvent)) {
@@ -195,13 +195,13 @@ int main(int argc, char *argv[]) {
                     cout << "r: " << r << " c: " << c << endl;
                     if (windowEvent.button.button == SDL_BUTTON_LEFT) {
                         if (firstClick) {
-                            board->handleFirstClick(r, c);
+                            board.handleFirstClick(r, c);
                             firstClick = false;
                             startTime = SDL_GetTicks();
                         } else
-                            board->processMove(r, c);
+                            board.processMove(r, c);
                     } else if (windowEvent.button.button == SDL_BUTTON_RIGHT) {
-                        board->flagCell(r, c);
+                        board.flagCell(r, c);
                     }
                 }
                 break;
@@ -212,8 +212,8 @@ int main(int argc, char *argv[]) {
             }
             }
         }
-        if (board->getGameState() != GameState::Playing) {
-            if (board->getGameState() == GameState::Won)
+        if (board.getGameState() != GameState::Playing) {
+            if (board.getGameState() == GameState::Won)
                 cout << "You won" << endl;
             else
                 cout << "You lost" << endl;
@@ -231,7 +231,6 @@ int main(int argc, char *argv[]) {
         SDL_RenderPresent(renderer);
     }
 
-    delete board;
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     TTF_CloseFont(font);
