@@ -163,7 +163,10 @@ bool translateMove(int x, int y, int &r, int &c) {
 
 int main(int argc, char *argv[]) {
     srand(time(0));
-    SDL_Init(SDL_INIT_EVERYTHING);
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        cerr << "SDL initialization failed: " << SDL_GetError() << endl;
+        return EXIT_FAILURE;
+    }
     if (TTF_Init() < 0) {
         cerr << "TTF initialization failed: " << TTF_GetError() << endl;
         return EXIT_FAILURE;
