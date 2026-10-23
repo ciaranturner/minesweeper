@@ -195,7 +195,6 @@ int main(int argc, char *argv[]) {
             switch (windowEvent.type) {
             case SDL_MOUSEBUTTONDOWN: {
                 if (translateMove(windowEvent.button.x, windowEvent.button.y, r, c)) {
-                    cout << "r: " << r << " c: " << c << endl;
                     if (windowEvent.button.button == SDL_BUTTON_LEFT) {
                         if (firstClick) {
                             board.handleFirstClick(r, c);
