@@ -161,7 +161,7 @@ bool translateMove(int x, int y, int &r, int &c) {
     return r < ROW_COUNT && c < COL_COUNT;
 }
 
-int main(int argc, char *argv[]) {
+int main(int, char *[]) {
     srand(time(0));
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         cerr << "SDL initialization failed: " << SDL_GetError() << endl;
