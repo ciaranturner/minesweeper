@@ -195,9 +195,14 @@ void Game::play() {
     cout << "Make your move (row# col#): ";
     int r, c;
     string a;
-    while (!readMove(r, c) || m_board->handleFirstClick(r, c) == MoveResult::Invalid) {
+    while (!readMove(r, c) ||
+           (r != 100 && m_board->handleFirstClick(r, c) == MoveResult::Invalid)) {
         cout << "Not the right format (row #, space, then column #)" << endl;
         cout << "Try again: ";
+    }
+    if (r == 100) {
+        quit();
+        return;
     }
     checkGameState();
     displayBoard();
