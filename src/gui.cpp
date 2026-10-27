@@ -11,13 +11,12 @@
 
 using namespace std;
 
-const int ROW_COUNT = 9;
-const int COL_COUNT = 9;
+const int DIMENSIONS = 9;
 
 const int BOARD_X = 70;
 const int BOARD_Y = 150;
 const int BOARD_SIZE = 530;
-const int CELL_SIZE = BOARD_SIZE / ROW_COUNT;
+const int CELL_SIZE = BOARD_SIZE / DIMENSIONS;
 
 void renderText(SDL_Renderer *renderer, TTF_Font *font, string &text, SDL_Color color, int x,
                 int y) {
@@ -59,8 +58,8 @@ void drawBackground(SDL_Renderer *renderer) {
     SDL_Rect gameplayBox;
     gameplayBox.x = BOARD_X;
     gameplayBox.y = BOARD_Y;
-    gameplayBox.w = CELL_SIZE * COL_COUNT;
-    gameplayBox.h = CELL_SIZE * ROW_COUNT;
+    gameplayBox.w = CELL_SIZE * DIMENSIONS;
+    gameplayBox.h = CELL_SIZE * DIMENSIONS;
     SDL_RenderDrawRect(renderer, &gameplayBox);
 
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
@@ -128,8 +127,8 @@ void displayBoard(const Board &board, SDL_Renderer *rend, TTF_Font *font) {
     renderText(rend, font, text, color, 155 - buffer, 88);
     color = {255, 255, 255, 255};
 
-    for (int i = 0; i < ROW_COUNT; i++) {
-        for (int j = 0; j < COL_COUNT; j++) {
+    for (int i = 0; i < DIMENSIONS; i++) {
+        for (int j = 0; j < DIMENSIONS; j++) {
             const Cell &cell = board.getCell(i, j);
             SDL_Rect box;
             box.x = BOARD_X + j * CELL_SIZE;
@@ -158,7 +157,7 @@ bool translateMove(int x, int y, int &r, int &c) {
         return false;
     r = (y - BOARD_Y) / CELL_SIZE;
     c = (x - BOARD_X) / CELL_SIZE;
-    return r < ROW_COUNT && c < COL_COUNT;
+    return r < DIMENSIONS && c < DIMENSIONS;
 }
 
 int main(int, char *[]) {
@@ -182,7 +181,7 @@ int main(int, char *[]) {
         return EXIT_FAILURE;
     }
     drawBackground(renderer);
-    Board board(ROW_COUNT, COL_COUNT, 10);
+    Board board(DIMENSIONS, 10);
     SDL_Event windowEvent;
     bool firstClick = true;
     bool running = true;

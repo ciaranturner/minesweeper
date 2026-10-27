@@ -29,8 +29,7 @@ class Game {
 
   private:
     Board *m_board;
-    int m_rows;
-    int m_cols;
+    int m_dimensions;
     bool m_gameOver;
     void displayBoard();
     void printValue(char value);
@@ -87,14 +86,14 @@ char cellSymbol(const Cell &cell, bool reveal) {
 
 void Game::displayBoard() {
     cout << "     ";
-    for (int i = -2; i < m_rows; i++) {
+    for (int i = -2; i < m_dimensions; i++) {
         if (i > 9)
             cout << i << " | ";
         else if (i > -1)
             cout << i << "  | ";
         else if (i == -1)
             cout << "     ";
-        for (int j = 0; j < m_cols; j++) {
+        for (int j = 0; j < m_dimensions; j++) {
             if (i == -1) {
                 cout << "---";
             } else if (i == -2) {
@@ -151,19 +150,16 @@ Game::Game() {
              inputchar != "m" && inputchar != "h");
     int bombs;
     if (inputchar == "E" || inputchar == "e") {
-        m_rows = 10;
-        m_cols = 10;
+        m_dimensions = 10;
         bombs = 10;
     } else if (inputchar == "M" || inputchar == "m") {
-        m_rows = 18;
-        m_cols = 18;
+        m_dimensions = 18;
         bombs = 40;
     } else {
-        m_rows = 24;
-        m_cols = 24;
+        m_dimensions = 24;
         bombs = 99;
     }
-    m_board = new Board(m_rows, m_cols, bombs);
+    m_board = new Board(m_dimensions, bombs);
 }
 
 Game::~Game() { delete m_board; }

@@ -3,11 +3,10 @@
 #include <board.h>
 #include <cell.h>
 
-Board::Board(int rows, int cols, int bombs) {
+Board::Board(int dimensions, int bombs) {
     m_bombs = bombs;
-    m_rows = rows;
-    m_cols = cols;
-    m_grid = std::vector<std::vector<Cell>>(rows, std::vector<Cell>(cols));
+    m_dimensions = dimensions;
+    m_grid = std::vector<std::vector<Cell>>(dimensions, std::vector<Cell>(dimensions));
     m_flagCount = 0;
 }
 
@@ -17,8 +16,8 @@ void Board::calculateValue(int row, int col) {
         for (int j = -1; j <= 1; j++) {
             int nr = row + i;
             int nc = col + j;
-            if ((i == 0 && j == 0) || nr < 0 || nr >= m_rows || nc < 0 || nc >= m_cols ||
-                !m_grid[nr][nc].isBomb()) {
+            if ((i == 0 && j == 0) || nr < 0 || nr >= m_dimensions || nc < 0 ||
+                nc >= m_dimensions || !m_grid[nr][nc].isBomb()) {
                 continue;
             }
             valueCounter++;
@@ -28,7 +27,7 @@ void Board::calculateValue(int row, int col) {
 }
 
 MoveResult Board::flagCell(int row, int col) {
-    if (row < 0 || row >= m_rows || col < 0 || col >= m_cols)
+    if (row < 0 || row >= m_dimensions || col < 0 || col >= m_dimensions)
         return MoveResult::Invalid;
     if (m_grid[row][col].isOpened())
         return MoveResult::AlreadyOpen;
@@ -56,7 +55,8 @@ MoveResult Board::processMove(int row, int col) {
 }
 
 bool Board::checkMove(int row, int col) {
-    return (row >= 0 && row < m_rows && col >= 0 && col < m_cols && !m_grid[row][col].isOpened());
+    return (row >= 0 && row < m_dimensions && col >= 0 && col < m_dimensions &&
+            !m_grid[row][col].isOpened());
 }
 
 MoveResult Board::handleFirstClick(int row, int col) {
@@ -66,17 +66,17 @@ MoveResult Board::handleFirstClick(int row, int col) {
     int c = 0;
 
     for (int i = 0; i < m_bombs; i++) {
-        r = rand() % m_rows;
-        c = rand() % m_cols;
+        r = rand() % m_dimensions;
+        c = rand() % m_dimensions;
         while (isNeighbor(r, c, row, col) || m_grid[r][c].isBomb()) {
-            r = rand() % m_rows;
-            c = rand() % m_cols;
+            r = rand() % m_dimensions;
+            c = rand() % m_dimensions;
         }
         m_grid[r][c].setBomb(true);
     }
 
-    for (int i = 0; i < m_rows; i++) {
-        for (int j = 0; j < m_cols; j++) {
+    for (int i = 0; i < m_dimensions; i++) {
+        for (int j = 0; j < m_dimensions; j++) {
             calculateValue(i, j);
         }
     }
@@ -86,8 +86,8 @@ MoveResult Board::handleFirstClick(int row, int col) {
 }
 
 void Board::floodFill(int row, int col) {
-    if (row < 0 || col < 0 || row >= m_rows || col >= m_cols || m_grid[row][col].isOpened() ||
-        m_grid[row][col].getFlag())
+    if (row < 0 || col < 0 || row >= m_dimensions || col >= m_dimensions ||
+        m_grid[row][col].isOpened() || m_grid[row][col].getFlag())
         return;
     if (m_grid[row][col].openCell())
         m_gameState = GameState::Lost;
@@ -115,8 +115,8 @@ int Board::getBombCount() const { return m_bombs; }
 void Board::updateGameState() {
     if (m_gameState != GameState::Playing)
         return;
-    for (int i = 0; i < m_rows; i++) {
-        for (int j = 0; j < m_cols; j++) {
+    for (int i = 0; i < m_dimensions; i++) {
+        for (int j = 0; j < m_dimensions; j++) {
             if (!m_grid[i][j].isOpened() && !m_grid[i][j].isBomb()) {
                 return;
             }

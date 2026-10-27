@@ -8,7 +8,7 @@ enum class MoveResult { Valid, Invalid, Flagged, AlreadyOpen };
 
 class Board {
   public:
-    Board(int rows, int cols, int bombs);
+    Board(int dimensions, int bombs);
     MoveResult flagCell(int row, int col);
     const Cell &getCell(int row, int col) const;
     MoveResult processMove(int row, int col);
@@ -21,8 +21,7 @@ class Board {
   private:
     std::vector<std::vector<Cell>> m_grid;
     int m_bombs;
-    int m_rows;
-    int m_cols;
+    int m_dimensions;
     int m_flagCount;
     GameState m_gameState = GameState::Playing;
     void updateGameState();
