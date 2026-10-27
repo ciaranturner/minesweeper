@@ -11,7 +11,7 @@
 
 using namespace std;
 
-const int DIMENSIONS = 9;
+const int DIMENSIONS = 12;
 
 const int BOARD_X = 70;
 const int BOARD_Y = 150;
@@ -184,10 +184,13 @@ int main(int, char *[]) {
     Board board(DIMENSIONS, 10);
     SDL_Event windowEvent;
     bool firstClick = true;
+    bool playing = true;
     bool running = true;
     int r, c;
     Uint32 startTime = 0;
-    while (running && board.getGameState() == GameState::Playing) {
+    string timerTxt = "0";
+    SDL_Color timeColor = {255, 255, 255, 255};
+    while (playing && board.getGameState() == GameState::Playing) {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
         while (SDL_PollEvent(&windowEvent)) {
@@ -208,6 +211,7 @@ int main(int, char *[]) {
                 break;
             }
             case SDL_QUIT: {
+                playing = false;
                 running = false;
                 break;
             }
@@ -218,17 +222,34 @@ int main(int, char *[]) {
                 cout << "You won" << endl;
             else
                 cout << "You lost" << endl;
-            running = false;
+            playing = false;
         }
 
         Uint32 elapsedTime = 0;
         if (!firstClick)
             elapsedTime = SDL_GetTicks() - startTime;
-        string timerTxt = to_string(elapsedTime / 1000);
+        timerTxt = to_string(elapsedTime / 1000);
 
         displayBoard(board, renderer, font);
-        SDL_Color timeColor = {255, 255, 255, 255};
         renderText(renderer, font, timerTxt, timeColor, 505, 88);
+        SDL_RenderPresent(renderer);
+    }
+    SDL_Rect newBox;
+    newBox.x = 300;
+    newBox.y = 300;
+    newBox.w = 120;
+    newBox.h = 120;
+
+    while (running) {
+        while (SDL_PollEvent(&windowEvent)) {
+            if (windowEvent.type == SDL_QUIT)
+                running = false;
+        }
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        displayBoard(board, renderer, font);
+        renderText(renderer, font, timerTxt, timeColor, 505, 88);
+        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+        SDL_RenderDrawRect(renderer, &newBox);
         SDL_RenderPresent(renderer);
     }
 
